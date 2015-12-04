@@ -16,9 +16,10 @@ struct Photo {
     var title: String
     var subtitle: String
     var imageURL: NSURL
+    var thumbnailURL: NSURL
     var owner: String
 
-    init(unique: String, title: String, subtitle: String?, owner: String, imageURL: NSURL) {
+    init(unique: String, title: String, subtitle: String?, owner: String, thumbnailURL: NSURL, imageURL: NSURL) {
         if let s = subtitle {
             self.subtitle = s
         } else {
@@ -31,6 +32,7 @@ struct Photo {
             self.title = title
         }
         self.imageURL = imageURL
+        self.thumbnailURL = thumbnailURL
         self.owner = owner
     }
 }
@@ -82,12 +84,14 @@ class FlickrModel {
             if let unique = photo[FLICKR_PHOTO_ID] as? String {
                 if let title = photo[FLICKR_PHOTO_TITLE] as? String {
                     if let imageURL = FlickrFetcher.URLforPhoto(photo, format: .FlickrPhotoFormatLarge) {
-                        if let photographer = photo[FLICKR_PHOTO_OWNER] as? String {
-                            if var photosBelongsTo = self.photographer[photographer] {
-                                photosBelongsTo.append(Photo.init(unique: unique, title: title, subtitle: photo[FLICKR_PHOTO_DESCRIPTION] as? String, owner: photographer, imageURL: imageURL))
-                                self.photographer[photographer] = photosBelongsTo
-                            } else {
-                                self.photographer[photographer] = [Photo.init(unique: unique, title: title, subtitle: photo[FLICKR_PHOTO_DESCRIPTION] as? String, owner: photographer, imageURL: imageURL)]
+                        if let thumbnailURL = FlickrFetcher.URLforPhoto(photo, format: .FlickrPhotoFormatSquare) {
+                            if let photographer = photo[FLICKR_PHOTO_OWNER] as? String {
+                                if var photosBelongsTo = self.photographer[photographer] {
+                                    photosBelongsTo.append(Photo.init(unique: unique, title: title, subtitle: photo[FLICKR_PHOTO_DESCRIPTION] as? String, owner: photographer, thumbnailURL: thumbnailURL, imageURL: imageURL))
+                                    self.photographer[photographer] = photosBelongsTo
+                                } else {
+                                    self.photographer[photographer] = [Photo.init(unique: unique, title: title, subtitle: photo[FLICKR_PHOTO_DESCRIPTION] as? String, owner: photographer, thumbnailURL: thumbnailURL, imageURL: imageURL)]
+                                }
                             }
                         }
                     }

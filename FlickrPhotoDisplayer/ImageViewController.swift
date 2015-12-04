@@ -12,7 +12,13 @@ class ImageViewController: UIViewController {
 
     @IBOutlet weak var imageView: UIImageView!
     
-    var image = UIImage.init()
+    var image = UIImage.init() {
+        didSet {
+            if let imageView = imageView {
+                imageView.image = image
+            }
+        }
+    }
 
 
     override func viewDidLoad() {

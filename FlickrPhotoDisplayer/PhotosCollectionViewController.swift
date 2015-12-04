@@ -18,12 +18,12 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         }
     }
 
-    var images = [UIImage]()
+    var thumbnailImages = [UIImage]()
 
     func beginDownloadImages() {
         for var photoInfo in photos {
-            downloadImage(photoInfo.imageURL, usingBlock: { (image) -> Void in
-                self.images.append(image!)
+            downloadImage(photoInfo.thumbnailURL, usingBlock: { (image) -> Void in
+                self.thumbnailImages.append(image!)
                 self.collectionView?.reloadData()
             })
         }
@@ -78,14 +78,14 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
 
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of items
-        return images.count
+        return thumbnailImages.count
     }
 
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PhotoCollectionViewCell", forIndexPath: indexPath) as! FlickrPhotoCollectionViewCell
 
         // Configure the cell
-        cell.imageView.image = images[indexPath.row]
+        cell.imageView.image = thumbnailImages[indexPath.row]
 
         return cell
     }
@@ -94,12 +94,12 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
 
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        let image = images[indexPath.row]
-        return CGSize(width: image.size.width / 10.0, height: image.size.height / 10.0)
+        let image = thumbnailImages[indexPath.row]
+        return CGSize(width: image.size.width, height: image.size.height)
     }
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 50.0, left: 10.0, bottom: 50.0, right: 10.0)
+        return UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
     }
 
     // MARK: UICollectionViewDelegate
@@ -144,8 +144,10 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
             if segue.destinationViewController.isKindOfClass(ImageViewController) {
                 let imageVC = segue.destinationViewController as! ImageViewController
                 let index = collectionView?.indexPathForCell(sender as! FlickrPhotoCollectionViewCell)?.row
-                imageVC.title = "\(images.count) Photos"
-                imageVC.image = images[index!]
+                imageVC.title = "\(thumbnailImages.count) Photos"
+                downloadImage(photos[index!].imageURL, usingBlock: { (image) -> Void in
+                    imageVC.image = image!
+                })
             }
         }
 
