@@ -11,6 +11,7 @@ import UIKit
 class PhotoNameTableViewController: UITableViewController {
 
     let model = FlickrModel()
+    // REVIEW: For `UIView`, you can try to use `lazy` to make them load on request
     let spinner = UIActivityIndicatorView.init(frame: CGRectMake(0, 0, 50, 50))
 
     override func viewDidLoad() {
@@ -18,6 +19,7 @@ class PhotoNameTableViewController: UITableViewController {
 
         self.title = "FlickrFetcher"
 
+        // REVIEW: Remove useless comment to make the code more readable.
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -27,10 +29,12 @@ class PhotoNameTableViewController: UITableViewController {
         spinner.activityIndicatorViewStyle = .Gray
         spinner.hidesWhenStopped = true
         spinner.startAnimating()
+        // REVIEW: When do you remove the spinner from the window??
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         spinner.center = CGPointMake(UIScreen.mainScreen().bounds.size.width / 2, UIScreen.mainScreen().bounds.size.height / 2)
         appDelegate.window?.addSubview(spinner)
 
+        // REVIEW: When do you remove the observer??
         NSNotificationCenter.defaultCenter().addObserverForName(FlickrInfoDownloaded, object: nil, queue: nil) { (note: NSNotification) -> Void in
             self.tableView.reloadData()
             self.spinner.stopAnimating()
@@ -55,6 +59,7 @@ class PhotoNameTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("PhotographerCell", forIndexPath: indexPath)
 
         // Configure the cell...
+        // REVIEW: Should be an array of `Photographer` object
         let photographerNames = Array(model.photographer.keys)
         cell.textLabel!.text = "Owner: \(photographerNames[indexPath.row])"
         cell.detailTextLabel!.text = "have \(model.photographer[photographerNames[indexPath.row]]!.count) photos"

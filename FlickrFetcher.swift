@@ -8,9 +8,12 @@
 
 import Foundation
 
+// REVIEW: you deleted the key in  FlickrAPIKey.h but not here...
 let FlickrAPIKey = "f3333822775812370a74dc8e72034ad9"
 
-
+// REVIEW: Constants can be placed inside the class with a struct called Constants.
+//         You can use extension to exten the class to store those constants if they are too much.
+//         You can also save them in different struct to categorize them.
 // key paths to photos or places at top-level of Flickr results
 let FLICKR_RESULTS_PHOTOS = "photos.photo"
 let FLICKR_RESULTS_PLACES = "places.place"
@@ -49,17 +52,22 @@ let FLICKR_PLACE_REGION = "place.region"
 
 
 
-
+// REVIEW: So as enum, can locate within the class to act namespaced MVC
 enum FlickrPhotoFormat: Int {
+    // REVIEW: No need to repeat `FlickrPhotoFormat`
     case FlickrPhotoFormatSquare = 1    // thumbnail
     case FlickrPhotoFormatLarge = 2     // normal size
     case FlickrPhotoFormatOriginal = 64  // high resolution
 }
 
 class FlickrFetcher {
+    // REVIEW: The URL prefix are all the same in `"https://api.flickr.com/services/rest/"`,
+    //         why not make them in this function?
+    //         Besides, how do you make sure the `query` parameter has `"?"` already?
     class func URLForQuery(query: String) -> NSURL? {
         var q = "\(query)&format=json&nojsoncallback=1&api_key=\(FlickrAPIKey)"
         q = q.stringByAddingPercentEncodingWithAllowedCharacters(.URLQueryAllowedCharacterSet())!
+        // REVIEW: no Need to write `init`, just use `NSURL(string: q)`
         return NSURL.init(string: q)
     }
 
@@ -75,6 +83,8 @@ class FlickrFetcher {
         return URLForQuery("https://api.flickr.com/services/rest/?method=flickr.photos.search&license=1,2,4,7&has_geo=1&extras=original_format,description,geo,date_upload,owner_name")
     }
 
+    // REVIEW: Just use [String: AnyObject] instead of Dictionary<String, AnyObject>,
+    //         or use a Photo struct/class may be better
     class func urlStringForPhoto(photo: Dictionary<String, AnyObject>, format: FlickrPhotoFormat) -> String? {
         let farm = photo["farm"]
         let server = photo["server"]
@@ -95,6 +105,7 @@ class FlickrFetcher {
 
         var formatString = "s"
 
+        // REVIEW: Just add a function to the enum so you can just use the enum value to get the string
         switch format {
         case .FlickrPhotoFormatSquare:
             formatString = "s"

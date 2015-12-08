@@ -20,7 +20,10 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
 
     var thumbnailImages = [UIImage]()
 
+    // REVIEW: Please group the methods in a certain area
+
     func beginDownloadImages() {
+        // REVIEW: If no change in var, use let or empty it in this case.
         for var photoInfo in photos {
             downloadImage(photoInfo.thumbnailURL, usingBlock: { (image) -> Void in
                 self.thumbnailImages.append(image!)
@@ -99,6 +102,7 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
     }
 
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        // REVIEW: No need to write `.0`, it will be auto translate into CGFloat.
         return UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
     }
 

@@ -20,6 +20,7 @@ struct Photo {
     var owner: String
 
     init(unique: String, title: String, subtitle: String?, owner: String, thumbnailURL: NSURL, imageURL: NSURL) {
+        // REVIEW: Just ues `self.subtitle = subtitle ?? "NO SUBTITLE"` is enough
         if let s = subtitle {
             self.subtitle = s
         } else {
@@ -37,8 +38,10 @@ struct Photo {
     }
 }
 
+// REVIEW: What is the use of this class?
 class FlickrModel {
 
+    // REVIEW: If photographer is an array, please use plural.
     var photographer = [String: [Photo]]()
 
 
@@ -72,6 +75,7 @@ class FlickrModel {
         do {
             let jsonResult = try NSJSONSerialization.JSONObjectWithData(flickrJSONData!, options: []) as! [String: AnyObject]
             let photos = jsonResult["photos"]!
+            // REVIEW: Please use `[[String: AnyObject]]` instead of `Array<[String: AnyObject]>`
             return photos["photo"] as? Array<[String: AnyObject]>
         } catch let e as NSError {
             print("\(e)")
@@ -81,6 +85,7 @@ class FlickrModel {
 
     private func loadImagesFromFlickrArray(photos: Array<[String: AnyObject]>) {
         for photo in photos {
+            // REVIEW: Too many `if let`, please use `guard let` instead.
             if let unique = photo[FLICKR_PHOTO_ID] as? String {
                 if let title = photo[FLICKR_PHOTO_TITLE] as? String {
                     if let imageURL = FlickrFetcher.URLforPhoto(photo, format: .FlickrPhotoFormatLarge) {

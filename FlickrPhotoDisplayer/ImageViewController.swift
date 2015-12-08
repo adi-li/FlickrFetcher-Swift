@@ -14,6 +14,7 @@ class ImageViewController: UIViewController {
     
     var image = UIImage.init() {
         didSet {
+            // REVIEW: You can write `imageView?.image = image` instead to make it optional again.
             if let imageView = imageView {
                 imageView.image = image
             }
