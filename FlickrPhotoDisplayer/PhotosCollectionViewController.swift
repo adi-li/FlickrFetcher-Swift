@@ -145,6 +145,8 @@ class PhotosCollectionViewController: UICollectionViewController, UICollectionVi
         // Pass the selected object to the new view controller.
 
         if segue.identifier == "ShowImageSegue" {
+            // REVIEW: You can use `segue.destinationViewController as? ImageViewController` instead
+            //         of using `isKindOfClass()`
             if segue.destinationViewController.isKindOfClass(ImageViewController) {
                 let imageVC = segue.destinationViewController as! ImageViewController
                 let index = collectionView?.indexPathForCell(sender as! FlickrPhotoCollectionViewCell)?.row
